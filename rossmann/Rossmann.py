@@ -1,19 +1,26 @@
-
-## 10.1 Rossmann Class
+import pickle
+import inflection
+import pandas as pd
+import numpy as np
+import math
+import datetime
+import warnings
+warnings.filterwarnings('ignore')
 
 class Rossmann(object):
     def __init__(self):
         self.competition_distance_scaler   = pickle.load(open('./parameter/competition_distance_scaler.pkl','rb'))
         self.competition_time_month_scaler = pickle.load(open('./parameter/competition_time_month_scaler.pkl','rb'))
-        self.promo_time_week               = pickle.load(open('./parameter/promo_time_week_scaler.pkl','rb'))
+        self.promo_time_week_scaler        = pickle.load(open('./parameter/promo_time_week_scaler.pkl','rb'))
         self.year_scaler                   = pickle.load(open('./parameter/year_scaler.pkl','rb'))
-        self_store_type_scaler             = pickle.load(open('./parameter/store_type_scaler.pkl','rb'))
+        self.store_type_scaler             = pickle.load(open('./parameter/store_type_scaler.pkl','rb'))
 
     # sec 1
     def data_cleaning(self,df1):
+        print('data_cleaning ok')
         
         ### 1.1 Rename Columns (sempre faça isso para facilitar)
-        cols_old = ['Store', 'DayOfWeek', 'Date', 'Sales', 'Customers', 'Open', 'Promo',
+        cols_old = ['Store', 'DayOfWeek', 'Date', 'Open', 'Promo',
                'StateHoliday', 'SchoolHoliday', 'StoreType', 'Assortment',
                'CompetitionDistance', 'CompetitionOpenSinceMonth',
                'CompetitionOpenSinceYear', 'Promo2', 'Promo2SinceWeek',
@@ -70,6 +77,7 @@ class Rossmann(object):
         return df1
     
     def feature_engineering( self, df2 ):
+        print('feature_engineering ok')
 
         # year
         df2['year'] = df2['date'].dt.year
@@ -99,11 +107,11 @@ class Rossmann(object):
         df2['state_holiday'] = df2['state_holiday'].apply( lambda x: 'public_holiday' if x == 'a' else 'easter_holiday' if x == 'b' else 'christmas' if x == 'c' else 'regular_day')
         
         # 3.0 Filtragem de Variáveis
-        df2 = df2[(df2['open'] != 0) & (df2['sales'] > 0)]
+        df2 = df2[df2['open'] != 0 ]
 
         ## 3.2 Selecao das Colunas
 
-        cols_drop = ['customers','open','promo_interval','month_map']
+        cols_drop = ['open','promo_interval','month_map']
         df2 = df2.drop( cols_drop, axis=1 )
         
         return df2
@@ -113,13 +121,14 @@ class Rossmann(object):
     
     # sec 5
     def data_preparation(self,df5):
+        print('data_preparation ok')
         
         # Competition Distance (Robust Scaler)
         df5['competition_distance']= self.competition_distance_scaler.fit_transform( df5[['competition_distance']].values )
         # competition time month (Robust Scaler)
         df5['competition_time_month']= self.competition_time_month_scaler.fit_transform( df5[['competition_time_month']].values )
         # promo time week (MinMaxScaler)
-        df5['promo_time_week']= self.promo_time_week.fit_transform( df5[['promo_time_week']].values )
+        df5['promo_time_week']= self.promo_time_week_scaler.fit_transform( df5[['promo_time_week']].values )
         # year
         df5['year']= self.year_scaler.fit_transform( df5[['year']].values )
 
@@ -148,7 +157,24 @@ class Rossmann(object):
         cols_selected= ['store','promo','store_type','assortment','competition_distance','competition_open_since_month','competition_open_since_year',
          'promo2','promo2_since_week','promo2_since_year','competition_time_month','promo_time_week',
          'month_cos','day_sin','day_cos','week_of_year_cos','day_of_week_sin','day_of_week_cos']
+
+        ext = ['month_sin','week_of_year_sin',]
+
+        cols_selected.extend( ext )
         
         return df5[ cols_selected ]
+
+    
+    def get_prediction( self, model, original_data, test_data ):
+        print('predict ok')
+        # prediction
+        pred = model.predict( test_data )
+        
+        # join pred into the original data
+        original_data['prediction'] = np.expm1( pred )
+        
+        return original_data.to_json( orient='records', date_format='iso' )
+
+
 
 
