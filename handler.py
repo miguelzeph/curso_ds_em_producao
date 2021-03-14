@@ -2,6 +2,7 @@ import pickle
 import pandas as pd
 from flask             import Flask, request, Response
 from rossmann.Rossmann import Rossmann
+import os
 
 # loading model
 model = pickle.load(open('./model/xgb.pkl','rb'))
@@ -42,4 +43,12 @@ def rossmann_predict():
         return Reponse( '{}', status=200, mimetype='application/json' )
 
 if __name__ == '__main__':
-    app.run( '0.0.0.0' , debug= True)
+    port = os.environ.get('PORT',5000)
+    app.run( host = '0.0.0.0',
+    port = port,
+    debug= False
+    )
+
+
+
+
