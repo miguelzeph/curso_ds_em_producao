@@ -5,7 +5,7 @@ import os
 from flask import Flask, Response, request
 
 # Constants
-TOKEN = str( os.environ.get('TOKEN') )# Pega no bot do Telegram
+TOKEN = str( os.environ['TOKEN'] )# Pega no bot do Telegram
 
 
 # --------------------------Como usar bot Telegram ------------------------------
@@ -134,9 +134,8 @@ def index():
 
 
 if __name__ == '__main__':
-    #port = os.environ.get( 'PORT', 5000 )
-    #app.run( host='0.0.0.0', port=port )
-    app.run(host='0.0.0.0', port = '5000', debug= True)
+    port = os.environ.get( 'PORT', 5000 )
+    app.run( host='0.0.0.0', port=port )
 
 
 
