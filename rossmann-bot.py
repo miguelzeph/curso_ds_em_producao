@@ -83,13 +83,14 @@ def parse_message( message ):
 
     chat_id = message['message']['chat']['id']
 
-    if message['message']['text'] == 'start':
+    if message['message']['text'] in ['start','/start','Start','/Start']:
         store_id = 'start'
         return chat_id, store_id
-    
 
     store_id = message['message']['text']
     store_id = store_id.replace( '/', '' )
+
+
     try:
         store_id = int( store_id )
 
@@ -110,7 +111,7 @@ def index():
 
         chat_id, store_id = parse_message( message )
 	
-        if store_id != 'error':
+        if store_id != 'error' and store_id !='start' :
             # loading data
             data = load_dataset( store_id )
 
