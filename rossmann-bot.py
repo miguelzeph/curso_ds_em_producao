@@ -5,7 +5,7 @@ import os
 from flask import Flask, Response, request
 
 # Constants
-TOKEN = os.environ.get('SECRET_KEY') # Pega no bot do Telegram
+TOKEN = str( os.environ.get('TOKEN') )# Pega no bot do Telegram
 
 
 # --------------------------Como usar bot Telegram ------------------------------
@@ -22,7 +22,6 @@ TOKEN = os.environ.get('SECRET_KEY') # Pega no bot do Telegram
 # webhook (para que o telegram encontre sua máquina... tem que chegar a mensagem aqui no python)
 # Então você vai na url do Browser e copia esse código, para set o telegram a enviar as mensagens para a máquina no heroku.
 #url ='https://api.telegram.org/bot'+TOKEN+'/setWebhook?url=LINK_DO_HEROKU'
-
 
 #----------------------------my functions------------------------------------------
 
@@ -102,7 +101,7 @@ def index():
         message = request.get_json()
 
         chat_id, store_id = parse_message( message )
-
+	
         if store_id != 'error':
             # loading data
             data = load_dataset( store_id )
@@ -110,7 +109,6 @@ def index():
             if data != 'error':
                 # prediction
                 d1 = predict( data )
-
                 # calculation
                 d2 = d1[['store', 'prediction']].groupby( 'store' ).sum().reset_index()
                 
@@ -136,8 +134,9 @@ def index():
 
 
 if __name__ == '__main__':
-    port = os.environ.get( 'PORT', 5000 )
-    app.run( host='0.0.0.0', port=port )
+    #port = os.environ.get( 'PORT', 5000 )
+    #app.run( host='0.0.0.0', port=port )
+    app.run(host='0.0.0.0', port = '5000', debug= True)
 
 
 
