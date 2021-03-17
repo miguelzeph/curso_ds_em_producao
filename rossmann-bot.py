@@ -135,7 +135,7 @@ def index():
         
         elif store_id == 'start':
             send_message( chat_id, 
-            'Instrunções: programa desenvolvido por Miguel para realizar predições de vendas nas próximas 6 semanas de todas as Loja da Rossmann.\n Cada loja tem um ID number... Digite um número: ')
+            'Instrunções: programa desenvolvido por Miguel para realizar predições de vendas nas próximas 6 semanas de todas as Loja da Rossmann. <br> Cada loja tem um ID number... Digite um número: ')
             return Response( 'Ok', status=200 )
 
         else:
