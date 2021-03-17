@@ -28,7 +28,7 @@ TOKEN = os.environ.get('SECRET_KEY') # Pega no bot do Telegram
 
 
 def send_message( chat_id, text ):
-    url = 'https://api.telegram.org/bot{}/'.format( TOKEN ) 
+    url = 'https://api.telegram.org/bot{}/'.format( str(TOKEN) ) 
     url = url + 'sendMessage?chat_id={}'.format( chat_id ) 
 
     r = requests.post( url, json={'text': text } )
@@ -39,8 +39,8 @@ def send_message( chat_id, text ):
 
 def load_dataset( store_id ):
     # loading test dataset
-    df10 = pd.read_csv( 'test.csv' )
-    df_store_raw = pd.read_csv( 'store.csv' )
+    df10 = pd.read_csv( 'https://raw.githubusercontent.com/miguelzeph/curso_ds_em_producao/master/data/test.csv',low_memory=False )
+    df_store_raw = pd.read_csv( 'https://raw.githubusercontent.com/miguelzeph/curso_ds_em_producao/master/data/store.csv',low_memory=False )
 
     # merge test dataset + store
     df_test = pd.merge( df10, df_store_raw, how='left', on='Store' )
