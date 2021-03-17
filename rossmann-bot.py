@@ -33,7 +33,7 @@ def send_message( chat_id, text ):
     r = requests.post( url, json={'text': text } )
     print( 'Status Code {}'.format( r.status_code ) )
 
-    return None
+    #return None
 
 def send_photo( chat_id, photo ):
     url = 'https://api.telegram.org/bot{}/'.format( str(TOKEN) ) 
@@ -42,7 +42,7 @@ def send_photo( chat_id, photo ):
     r = requests.post( url, json={'photo': photo } )
     print( 'Status Code {}'.format( r.status_code ) )
 
-    return None
+    #return None
 
 
 def load_dataset( store_id ):
@@ -143,10 +143,18 @@ def index():
                 return Response( 'Ok', status=200 )
         
         elif store_id == 'start':
+
             send_message( chat_id, 
-            'Instructions: program developed by Miguel to make sales predictions in the next 6 weeks of all Rossmann stores (datas provided by Kaggle). Each store has an ID number ... to see its prediction, Enter a number:')
-            send_photo( chat_id, 'https://github.com/miguelzeph/curso_ds_em_producao/blob/telegram_bot/img/teste.png?raw=true')
+            'Instructions: program developed by Miguel to make sales predictions in the next 6 weeks of all Rossmann stores (datas provided by Kaggle). For this, it was used the XGBoost model.')
+
+            send_message( chat_id,'Predicts using the model')
+            send_photo( chat_id, 'https://github.com/miguelzeph/curso_ds_em_producao/blob/telegram_bot/img/predictions_sale_geral.png?raw=true')
+            send_message( chat_id,'Mean percent Error, above 1.0 the model has overestimate behavior and below 1.0 has underestimate')
+            send_photo( chat_id, 'https://github.com/miguelzeph/curso_ds_em_producao/blob/telegram_bot/img/mean_percent_error.png?raw=true')
             
+            send_message( chat_id, 'Each store has an ID number ... to see its prediction, Enter with a NUMBER:')
+
+
             return Response( 'Ok', status=200 )
 
         else:
