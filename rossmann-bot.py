@@ -145,7 +145,8 @@ def index():
         elif store_id == 'start':
             send_message( chat_id, 
             'Instructions: program developed by Miguel to make sales predictions in the next 6 weeks of all Rossmann stores (datas provided by Kaggle). Each store has an ID number ... to see its prediction, Enter a number:')
-            send_photo( chat_id, 'https://github.com/miguelzeph/curso_ds_em_producao/blob/telegram_bot/img/teste.png?raw=true')
+            #send_photo( chat_id, 'https://github.com/miguelzeph/curso_ds_em_producao/blob/telegram_bot/img/teste.png?raw=true')
+            send_photo( chat_id, 'img/teste.png')
             return Response( 'Ok', status=200 )
 
         else:
