@@ -78,11 +78,18 @@ def predict( data ):
 
 
 def parse_message( message ):
+
+        
+
     chat_id = message['message']['chat']['id']
+
+    if message['message']['text'] == 'start':
+        store_id = 'start'
+        return chat_id, store_id
+    
+
     store_id = message['message']['text']
-
     store_id = store_id.replace( '/', '' )
-
     try:
         store_id = int( store_id )
 
@@ -94,6 +101,7 @@ def parse_message( message ):
 
 # API initialize
 app = Flask( __name__ )
+
 
 @app.route( '/', methods=['GET', 'POST'] )
 def index():
@@ -121,11 +129,16 @@ def index():
                 return Response( 'Ok', status=200 )
 
             else:
-                send_message( chat_id, 'Store Not Available' )
+                send_message( chat_id, 'Store Not Available, try other store number.' )
                 return Response( 'Ok', status=200 )
+        
+        elif store_id == 'start':
+            send_message( chat_id, 
+            'Instrunções: programa desenvolvido por Miguel para realizar predições de vendas nas próximas 6 semanas de todas as Loja da Rossmann.\n Cada loja tem um ID number... Digite um número: ')
+            return Response( 'Ok', status=200 )
 
         else:
-            send_message( chat_id, 'Store ID is Wrong' )
+            send_message( chat_id, 'Store ID is Wrong, please type a number.' )
             return Response( 'Ok', status=200 )
 
 
