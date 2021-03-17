@@ -35,6 +35,15 @@ def send_message( chat_id, text ):
 
     return None
 
+def send_photo( chat_id, photo ):
+    url = 'https://api.telegram.org/bot{}/'.format( str(TOKEN) ) 
+    url = url + 'sendPhoto?chat_id={}'.format( chat_id ) 
+
+    r = requests.post( url, json={'photo': photo } )
+    print( 'Status Code {}'.format( r.status_code ) )
+
+    return None
+
 
 def load_dataset( store_id ):
     # loading test dataset
@@ -136,6 +145,7 @@ def index():
         elif store_id == 'start':
             send_message( chat_id, 
             'Instructions: program developed by Miguel to make sales predictions in the next 6 weeks of all Rossmann stores (datas provided by Kaggle). Each store has an ID number ... to see its prediction, Enter a number:')
+            send_photo( chat_id, './img/teste.png' )
             return Response( 'Ok', status=200 )
 
         else:
